@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Meta Ads — Dra. Agnnes Balieiro</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --surface-alt: #f1f3f9;
+    --border: #e2e6ef;
+    --text: #1a1d26;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --primary: #4f46e5;
+    --primary-light: #eef2ff;
+    --green: #10b981;
+    --green-light: #ecfdf5;
+    --green-bg: #d1fae5;
+    --red: #ef4444;
+    --red-light: #fef2f2;
+    --red-bg: #fee2e2;
+    --amber: #f59e0b;
+    --amber-light: #fffbeb;
+    --amber-bg: #fef3c7;
+    --blue: #3b82f6;
+    --blue-light: #eff6ff;
+    --purple: #8b5cf6;
+    --purple-light: #f5f3ff;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 6px;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Layout */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .main { margin-left: 260px; flex: 1; padding: 32px 40px; max-width: 1280px; }
+
+  /* Sidebar */
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 8px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .sidebar-brand-icon {
+    width: 36px; height: 36px;
+    background: var(--primary);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 14px;
+  }
+  .sidebar-brand-text { font-weight: 700; font-size: 14px; color: var(--text); }
+  .sidebar-brand-sub { font-size: 11px; color: var(--text-muted); font-weight: 400; }
+
+  .sidebar-section { margin-bottom: 24px; }
+  .sidebar-section-title {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted);
+    padding: 0 12px; margin-bottom: 8px;
+  }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-radius: var(--radius-xs);
+    font-size: 13px; font-weight: 500; color: var(--text-secondary);
+    text-decoration: none; transition: all 0.15s;
+    cursor: pointer;
+  }
+  .sidebar-link:hover { background: var(--surface-alt); color: var(--text); }
+  .sidebar-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+  .sidebar-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .sidebar-link .badge {
+    margin-left: auto; background: var(--red); color: white;
+    font-size: 10px; font-weight: 600; padding: 1px 6px;
+    border-radius: 10px;
+  }
+
+  /* Header */
+  .page-header { margin-bottom: 32px; }
+  .breadcrumb {
+    font-size: 12px; color: var(--text-muted); margin-bottom: 8px;
+    display: flex; gap: 6px; align-items: center;
+  }
+  .breadcrumb span { color: var(--text-secondary); }
+  .page-title { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .page-subtitle { font-size: 13px; color: var(--text-secondary); }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .card-title { font-size: 16px; font-weight: 700; }
+  .card-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .card-badge {
+    font-size: 11px; font-weight: 600; padding: 4px 10px;
+    border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .badge-green { background: var(--green-bg); color: #065f46; }
+  .badge-red { background: var(--red-bg); color: #991b1b; }
+  .badge-amber { background: var(--amber-bg); color: #92400e; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-purple { background: #ede9fe; color: #5b21b6; }
+
+  /* KPI Grid */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .kpi-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .kpi-value { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .kpi-change { font-size: 12px; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+  .kpi-change.positive { color: var(--green); }
+  .kpi-change.negative { color: var(--red); }
+  .kpi-change.neutral { color: var(--text-muted); }
+  .kpi-detail { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* Two Column */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left; padding: 10px 12px;
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-alt);
+  }
+  td {
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafbfd; }
+  .td-name { font-weight: 600; color: var(--text); max-width: 260px; }
+  .td-mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+  .td-right { text-align: right; }
+
+  /* Status dots */
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    display: inline-block; margin-right: 6px;
+  }
+  .dot-green { background: var(--green); }
+  .dot-red { background: var(--red); }
+  .dot-amber { background: var(--amber); }
+  .dot-gray { background: #d1d5db; }
+
+  /* Insight cards */
+  .insight-card {
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .insight-card.good { background: var(--green-light); border-left: 3px solid var(--green); }
+  .insight-card.bad { background: var(--red-light); border-left: 3px solid var(--red); }
+  .insight-card.warn { background: var(--amber-light); border-left: 3px solid var(--amber); }
+  .insight-card.info { background: var(--blue-light); border-left: 3px solid var(--blue); }
+  .insight-card.purple { background: var(--purple-light); border-left: 3px solid var(--purple); }
+  .insight-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .insight-text { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* Progress bars */
+  .progress-bar-wrap { margin-bottom: 14px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .progress-label-name { font-weight: 600; }
+  .progress-label-value { color: var(--text-muted); font-family: 'SF Mono', monospace; font-size: 11px; }
+  .progress-track { height: 8px; background: var(--surface-alt); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+  .fill-green { background: var(--green); }
+  .fill-red { background: var(--red); }
+  .fill-amber { background: var(--amber); }
+  .fill-blue { background: var(--blue); }
+  .fill-purple { background: var(--purple); }
+  .fill-primary { background: var(--primary); }
+
+  /* Recommendation list */
+  .rec-list { list-style: none; padding: 0; }
+  .rec-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .rec-list li:last-child { border-bottom: none; }
+  .rec-icon {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0; margin-top: 1px;
+  }
+  .rec-icon.critical { background: var(--red-bg); color: var(--red); }
+  .rec-icon.high { background: var(--amber-bg); color: var(--amber); }
+  .rec-icon.medium { background: var(--blue-light); color: var(--blue); }
+  .rec-title { font-weight: 600; margin-bottom: 2px; }
+  .rec-desc { color: var(--text-secondary); font-size: 12px; }
+
+  /* Funnel */
+  .funnel { display: flex; flex-direction: column; gap: 8px; padding: 8px 0; }
+  .funnel-step {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-alt);
+    position: relative;
+  }
+  .funnel-step::after {
+    content: '';
+    position: absolute;
+    left: 28px;
+    bottom: -10px;
+    width: 2px;
+    height: 10px;
+    background: var(--border);
+  }
+  .funnel-step:last-child::after { display: none; }
+  .funnel-number {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .funnel-label { font-size: 13px; font-weight: 600; }
+  .funnel-detail { font-size: 11px; color: var(--text-muted); }
+  .funnel-value { margin-left: auto; font-weight: 700; font-size: 14px; }
+
+  /* Score */
+  .score-circle {
+    width: 100px; height: 100px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 800;
+    margin: 0 auto 12px;
+  }
+  .score-low { background: var(--red-bg); color: var(--red); border: 3px solid var(--red); }
+  .score-mid { background: var(--amber-bg); color: var(--amber); border: 3px solid var(--amber); }
+  .score-high { background: var(--green-bg); color: var(--green); border: 3px solid var(--green); }
+  .score-label { text-align: center; font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+  .tab {
+    padding: 10px 20px;
+    font-size: 13px; font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .tab:hover { color: var(--text); }
+
+  .section-divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  .section-title {
+    font-size: 20px; font-weight: 800; letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .section-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+
+  /* Tag */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-green { background: var(--green-bg); color: #065f46; }
+  .tag-red { background: var(--red-bg); color: #991b1b; }
+  .tag-amber { background: var(--amber-bg); color: #92400e; }
+  .tag-blue { background: #dbeafe; color: #1e40af; }
+
+  /* Creative card */
+  .creative-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .creative-header {
+    background: #1e1e2e;
+    color: white;
+    padding: 16px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .creative-header h4 { font-size: 14px; font-weight: 700; }
+  .creative-header p { font-size: 11px; opacity: 0.7; margin-top: 4px; }
+  .creative-body { padding: 16px; }
+  .creative-stat { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; }
+  .creative-stat-label { color: var(--text-muted); }
+  .creative-stat-value { font-weight: 700; }
+
+  /* Campaign structure diagram */
+  .structure-tree { padding: 12px 0; }
+  .tree-campaign {
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    background: var(--primary-light);
+  }
+  .tree-campaign-title { font-weight: 700; font-size: 14px; color: var(--primary); }
+  .tree-campaign-meta { font-size: 11px; color: var(--text-muted); }
+  .tree-adsets { padding-left: 32px; }
+  .tree-adset {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background: var(--surface);
+    font-size: 12px;
+    position: relative;
+  }
+  .tree-adset::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    width: 16px;
+    height: 1px;
+    background: var(--border);
+  }
+  .tree-adset-name { font-weight: 600; margin-bottom: 2px; }
+  .tree-adset-detail { color: var(--text-muted); font-size: 11px; }
+
+  @media (max-width: 1024px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 20px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+  }
+
+  /* Print */
+  @media print {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .card { break-inside: avoid; }
+  }
+
+  /* Scroll spy active nav */
+  .nav-indicator {
+    width: 3px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 2px;
+    position: absolute;
+    left: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">N</div>
+      <div>
+        <div class="sidebar-brand-text">Noha Ads Manager</div>
+        <div class="sidebar-brand-sub">Audit Report</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Overview</div>
+      <a href="#summary" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Resumo Geral
+      </a>
+      <a href="#insights" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+        Key Insights
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Analise</div>
+      <a href="#campaigns" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+        Campanhas
+      </a>
+      <a href="#audiences" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Audiencias
+      </a>
+      <a href="#creatives" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        Criativos
+      </a>
+      <a href="#working" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Funcionou vs Nao
+        <span class="badge">!</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Recomendacoes</div>
+      <a href="#strategy" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Estrategia
+      </a>
+      <a href="#structure" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Estrutura Sugerida
+      </a>
+      <a href="#budget" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Budget
+      </a>
+      <a href="#tracking" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Tracking
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="breadcrumb">
+        Home <span>/</span> Clientes <span>/</span> <span>Dra. Agnnes Balieiro</span>
+      </div>
+      <h1 class="page-title">Audit — Dra. Agnnes Balieiro</h1>
+      <p class="page-subtitle">Nutrologia &bull; Moema, Sao Paulo &bull; Conta: CA Agnnes Balieiro &bull; Periodo: Out 2024 — Mar 2026</p>
+    </div>
+
+    <!-- ================================================ -->
+    <!-- SECTION: RESUMO GERAL -->
+    <!-- ================================================ -->
+    <section id="summary">
+      <div class="tabs">
+        <div class="tab active">Performance Geral</div>
+        <div class="tab">Periodo Completo</div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="kpi-label">Investimento Total</div>
+          <div class="kpi-value">R$ 2.494</div>
+          <div class="kpi-change neutral">9 campanhas &bull; Todas pausadas</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Leads Gerados</div>
+          <div class="kpi-value" style="color: var(--primary);">36</div>
+          <div class="kpi-change negative">CPL medio R$ 35,26</div>
+          <div class="kpi-detail">Via formularios instantaneos</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Alcance Total</div>
+          <div class="kpi-value">165.262</div>
+          <div class="kpi-change positive">238.782 impressoes</div>
+          <div class="kpi-detail">Freq. media: 1.44</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Mensagens WhatsApp</div>
+          <div class="kpi-value" style="color: var(--green);">56</div>
+          <div class="kpi-change neutral">Conexoes de mensagem</div>
+          <div class="kpi-detail">Custo medio: R$ 5,82/msg</div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="kpi-label">CTR Medio</div>
+          <div class="kpi-value">1,23%</div>
+          <div class="kpi-change neutral">Benchmark saude: 0.8-1.5%</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">CPC Medio</div>
+          <div class="kpi-value">R$ 2,78</div>
+          <div class="kpi-change neutral">Variacao alta entre campanhas</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Video Views</div>
+          <div class="kpi-value">67.619</div>
+          <div class="kpi-change positive">Custo medio: R$ 0,02/view</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Melhor CPL</div>
+          <div class="kpi-value" style="color: var(--green);">R$ 13,72</div>
+          <div class="kpi-change positive">CA3 CJ2 - ADV+ Raio 3KM</div>
+        </div>
+      </div>
+
+      <!-- Account Health Score -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Account Health Score</div>
+            <div class="card-subtitle">Avaliacao geral da conta de anuncios</div>
+          </div>
+          <span class="card-badge badge-amber">Precisa Atencao</span>
+        </div>
+        <div class="two-col">
+          <div style="text-align: center; padding: 20px 0;">
+            <div class="score-circle score-mid">4.5</div>
+            <div class="score-label">de 10 pontos</div>
+          </div>
+          <div>
+            <div class="progress-bar-wrap">
+              <div class="progress-label"><span class="progress-label-name">Estrutura de Campanhas</span><span class="progress-label-value">5/10</span></div>
+              <div class="progress-track"><div class="progress-fill fill-amber" style="width:50%"></div></div>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-label"><span class="progress-label-name">Segmentacao de Publico</span><span class="progress-label-value">6/10</span></div>
+              <div class="progress-track"><div class="progress-fill fill-amber" style="width:60%"></div></div>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-label"><span class="progress-label-name">Qualidade dos Criativos</span><span class="progress-label-value">7/10</span></div>
+              <div class="progress-track"><div class="progress-fill fill-green" style="width:70%"></div></div>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-label"><span class="progress-label-name">Otimizacao de Budget</span><span class="progress-label-value">3/10</span></div>
+              <div class="progress-track"><div class="progress-fill fill-red" style="width:30%"></div></div>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-label"><span class="progress-label-name">Tracking & Pixel</span><span class="progress-label-value">4/10</span></div>
+              <div class="progress-track"><div class="progress-fill fill-red" style="width:40%"></div></div>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-label"><span class="progress-label-name">Testes & Iteracao</span><span class="progress-label-value">5/10</span></div>
+              <div class="progress-track"><div class="progress-fill fill-amber" style="width:50%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ================================================ -->
+    <!-- SECTION: KEY INSIGHTS -->
+    <!-- ================================================ -->
+    <section id="insights">
+      <h2 class="section-title">Key Insights</h2>
+      <p class="section-desc">Principais descobertas da analise da conta</p>
+
+      <div class="two-col">
+        <div>
+          <div class="insight-card good">
+            <div class="insight-title">ADV+ com Geo-restricao e o melhor formato</div>
+            <div class="insight-text">O conjunto CJ2 da CA3 (Raio 3KM, ADV+, Publico aberto) gerou 11 leads a R$ 13,72 — o menor CPL da conta. A combinacao de Advantage+ com restricao geografica pequena permite que o algoritmo otimize dentro do publico certo.</div>
+          </div>
+          <div class="insight-card good">
+            <div class="insight-title">Criativo "Protocolo DEFINE" e o top performer</div>
+            <div class="insight-text">Consistentemente o melhor criativo em todas as campanhas. Na CA3 CJ2 alcancou CPL de R$ 13,53 e na CA5 teve CTR de 4,78%. O formato educativo + oferta de protocolo especifico converte.</div>
+          </div>
+          <div class="insight-card good">
+            <div class="insight-title">Custo por video view excelente</div>
+            <div class="insight-text">Awareness e engajamento com video views a R$ 0,01-0,02/view. Isso mostra que o conteudo de video ressoa com o publico. Use isso para alimentar funis de retargeting.</div>
+          </div>
+          <div class="insight-card info">
+            <div class="insight-title">WhatsApp converte melhor que Formulario em CPM alto</div>
+            <div class="insight-text">O custo por conexao de WhatsApp (R$ 4,46-6,98) e inferior ao CPL via formulario na maioria dos adsets (R$ 20-47). Mas a qualidade do lead via formulario tende a ser maior — vale testar a taxa de conversao final.</div>
+          </div>
+        </div>
+        <div>
+          <div class="insight-card bad">
+            <div class="insight-title">R$ 540 em awareness sem funil de retargeting ativo</div>
+            <div class="insight-text">A campanha [ADR] gastou R$ 540 gerando 28K video views, mas nao ha campanha de retargeting capturando esses visualizadores. Esse investimento esta sendo desperdicado.</div>
+          </div>
+          <div class="insight-card bad">
+            <div class="insight-title">Todas as campanhas estao pausadas</div>
+            <div class="insight-text">Nenhuma campanha esta ativa. Isso significa zero aprendizado de algoritmo acumulado, zero leads entrando, e o pixel esfriando. Cada dia parado e dinheiro jogado fora na re-otimizacao futura.</div>
+          </div>
+          <div class="insight-card bad">
+            <div class="insight-title">Interesses de nicho estao custando caro</div>
+            <div class="insight-text">"Empresaria - socia" como interesse gera CPL de R$ 40+. "Delivery/Filmes/alta renda" gastou R$ 86 e nao gerou nenhum lead. Segmentacoes muito restritivas estao encarecendo a operacao.</div>
+          </div>
+          <div class="insight-card warn">
+            <div class="insight-title">Muita fragmentacao de testes sem volume</div>
+            <div class="insight-text">54 anuncios distribuidos em 19 ad sets com orcamento total de apenas R$ 2.494. Isso da cerca de R$ 130 por adset — insuficiente para sair da fase de aprendizado. Os dados nao sao estatisticamente relevantes em muitos conjuntos.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ================================================ -->
+    <!-- SECTION: CAMPANHAS -->
+    <!-- ================================================ -->
+    <section id="campaigns">
+      <h2 class="section-title">Analise de Campanhas</h2>
+      <p class="section-desc">Performance detalhada de cada campanha</p>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Campanha</th>
+                <th>Objetivo</th>
+                <th style="text-align:right">Gasto</th>
+                <th style="text-align:right">Alcance</th>
+                <th style="text-align:right">CTR</th>
+                <th style="text-align:right">Leads</th>
+                <th style="text-align:right">CPL</th>
+                <th style="text-align:right">Msgs</th>
+                <th>Veredicto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-name">[CA3] LEADS FORMS ABO</td>
+                <td><span class="tag tag-blue">Leads</span></td>
+                <td class="td-right td-mono">R$ 270,67</td>
+                <td class="td-right td-mono">4.164</td>
+                <td class="td-right td-mono">2,32%</td>
+                <td class="td-right td-mono" style="font-weight:700;color:var(--green)">13</td>
+                <td class="td-right td-mono" style="font-weight:700;color:var(--green)">R$ 20,82</td>
+                <td class="td-right td-mono">5</td>
+                <td><span class="tag tag-green">Melhor</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">[CA5] LEADS WHATSAPP ABO</td>
+                <td><span class="tag tag-blue">Leads</span></td>
+                <td class="td-right td-mono">R$ 250,39</td>
+                <td class="td-right td-mono">1.890</td>
+                <td class="td-right td-mono">6,06%</td>
+                <td class="td-right td-mono" style="font-weight:700">7</td>
+                <td class="td-right td-mono">R$ 35,77</td>
+                <td class="td-right td-mono">1</td>
+                <td><span class="tag tag-green">Bom</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">[CA2] LEADS FORMS</td>
+                <td><span class="tag tag-blue">Leads</span></td>
+                <td class="td-right td-mono">R$ 750,98</td>
+                <td class="td-right td-mono">8.817</td>
+                <td class="td-right td-mono">1,91%</td>
+                <td class="td-right td-mono" style="font-weight:700">16</td>
+                <td class="td-right td-mono" style="color:var(--amber)">R$ 46,94</td>
+                <td class="td-right td-mono">5</td>
+                <td><span class="tag tag-amber">Regular</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">[NOHA 01] ENGAJ. WHATSAPP</td>
+                <td><span class="tag tag-purple">Engajamento</span></td>
+                <td class="td-right td-mono">R$ 291,23</td>
+                <td class="td-right td-mono">2.715</td>
+                <td class="td-right td-mono">2,12%</td>
+                <td class="td-right td-mono">0</td>
+                <td class="td-right td-mono">—</td>
+                <td class="td-right td-mono" style="font-weight:700;color:var(--green)">54</td>
+                <td><span class="tag tag-green">Bom p/ msgs</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">[CA1] RECONHECIMENTO</td>
+                <td><span class="tag tag-amber">Awareness</span></td>
+                <td class="td-right td-mono">R$ 149,02</td>
+                <td class="td-right td-mono">81.297</td>
+                <td class="td-right td-mono">0,18%</td>
+                <td class="td-right td-mono">0</td>
+                <td class="td-right td-mono">—</td>
+                <td class="td-right td-mono">0</td>
+                <td><span class="tag tag-amber">Ok p/ alcance</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">Post IG: "Voce nao esta cansada..."</td>
+                <td><span class="tag tag-amber">Link Clicks</span></td>
+                <td class="td-right td-mono">R$ 149,40</td>
+                <td class="td-right td-mono">23.698</td>
+                <td class="td-right td-mono" style="font-weight:700;color:var(--green)">6,57%</td>
+                <td class="td-right td-mono">0</td>
+                <td class="td-right td-mono">—</td>
+                <td class="td-right td-mono">0</td>
+                <td><span class="tag tag-green">Alto CTR</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">[ADR] CAMPANHA DE ATRACAO</td>
+                <td><span class="tag tag-purple">Engajamento</span></td>
+                <td class="td-right td-mono">R$ 540,00</td>
+                <td class="td-right td-mono">41.729</td>
+                <td class="td-right td-mono">0,27%</td>
+                <td class="td-right td-mono">0</td>
+                <td class="td-right td-mono">—</td>
+                <td class="td-right td-mono">0</td>
+                <td><span class="tag tag-red">Sem funil</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">[CA4] ENGAJ. MEIO CBO</td>
+                <td><span class="tag tag-purple">Engajamento</span></td>
+                <td class="td-right td-mono">R$ 92,52</td>
+                <td class="td-right td-mono">955</td>
+                <td class="td-right td-mono">0,75%</td>
+                <td class="td-right td-mono">0</td>
+                <td class="td-right td-mono">—</td>
+                <td class="td-right td-mono">2</td>
+                <td><span class="tag tag-red">Ruim</span></td>
+              </tr>
+              <tr>
+                <td class="td-name">[CA1] TRAFEGO Instagram</td>
+                <td><span class="tag tag-amber">Trafego</span></td>
+                <td class="td-right td-mono">R$ 0</td>
+                <td class="td-right td-mono">—</td>
+                <td class="td-right td-mono">—</td>
+                <td class="td-right td-mono">0</td>
+                <td class="td-right td-mono">—</td>
+                <td class="td-right td-mono">0</td>
+                <td><span class="tag tag-red">Sem dados</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ================================================ -->
+    <!-- SECTION: AUDIENCES -->
+    <!-- ================================================ -->
+    <section id="audiences">
+      <h2 class="section-title">Analise de Audiencias</h2>
+      <p class="section-desc">Performance por segmentacao de publico — ranking por CPL</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Ranking de Audiencias por Custo por Lead</div>
+            <div class="card-subtitle">Apenas ad sets com leads gerados</div>
+          </div>
+        </div>
+
+        <!-- Best audiences -->
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span class="progress-label-name"><span class="status-dot dot-green"></span>Raio 3KM - ADV+ Publico Aberto (CA3 CJ2)</span>
+            <span class="progress-label-value">11 leads &bull; CPL R$ 13,72</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span class="progress-label-name"><span class="status-dot dot-green"></span>Reposicao Hormonal Gaya (CA2 CJ3 - Casadas/maes)</span>
+            <span class="progress-label-value">5 leads &bull; CPL R$ 18,66</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill fill-green" style="width:74%"></div></div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span class="progress-label-name"><span class="status-dot dot-green"></span>Falta de Libido (CA2 CJ4 - Marcas de Moda)</span>
+            <span class="progress-label-value">6 leads &bull; CPL R$ 22,12</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill fill-green" style="width:62%"></div></div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span class="progress-label-name"><span class="status-dot dot-amber"></span>Raio 5KM - ADV+ Rolex (CA5 CJ2)</span>
+            <span class="progress-label-value">4 leads &bull; CPL R$ 31,89</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill fill-amber" style="width:43%"></div></div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span class="progress-label-name"><span class="status-dot dot-amber"></span>Casadas/maes/empreendedora (CA2 CJ3)</span>
+            <span class="progress-label-value">10 leads &bull; CPL R$ 36,50</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill fill-amber" style="width:38%"></div></div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span class="progress-label-name"><span class="status-dot dot-amber"></span>Lookalike 1% Seguidores (CA5 CJ1)</span>
+            <span class="progress-label-value">3 leads &bull; CPL R$ 40,94</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill fill-amber" style="width:34%"></div></div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span class="progress-label-name"><span class="status-dot dot-red"></span>Empresaria - socia (CA3 CJ1)</span>
+            <span class="progress-label-value">1 lead &bull; CPL R$ 40,93</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill fill-red" style="width:34%"></div></div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span class="progress-label-name"><span class="status-dot dot-red"></span>SP ZS Marcas de Moda (CA2 CJ4)</span>
+            <span class="progress-label-value">6 leads &bull; CPL R$ 46,46</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill fill-red" style="width:30%"></div></div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span class="progress-label-name"><span class="status-dot dot-red"></span>Saude/Fitness/Viajantes (CA3 CJ3)</span>
+            <span class="progress-label-value">1 lead &bull; CPL R$ 70,63</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill fill-red" style="width:19%"></div></div>
+        </div>
+      </div>
+
+      <!-- Audience insights -->
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Audiencias de WhatsApp</div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label">
+              <span class="progress-label-name">SP CIDADE ADV+ Pub. Aberto</span>
+              <span class="progress-label-value">34 msgs &bull; R$ 4,46/msg</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label">
+              <span class="progress-label-name">Raio 7KM Empresaria (ADV-)</span>
+              <span class="progress-label-value">20 msgs &bull; R$ 6,98/msg</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill fill-green" style="width:64%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label">
+              <span class="progress-label-name">Raio 4KM Homens (CA4)</span>
+              <span class="progress-label-value">2 msgs &bull; R$ 18,95/msg</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill fill-red" style="width:23%"></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Segmentacoes que Falharam</div></div>
+            <span class="card-badge badge-red">Evitar</span>
+          </div>
+          <div class="insight-card bad">
+            <div class="insight-title">Delivery/Filmes/Alta renda (CA2 CJ1)</div>
+            <div class="insight-text">R$ 86,23 gastos, 0 leads. Interesses muito amplos (iFood, Netflix, bens de luxo) nao tem correlacao com busca por nutrologia.</div>
+          </div>
+          <div class="insight-card bad">
+            <div class="insight-title">Saude/Fitness raio 4KM com CBO (CA4)</div>
+            <div class="insight-text">R$ 92,52 gastos, apenas 2 conversas iniciadas. CBO com budget muito baixo nao consegue otimizar entre ad sets.</div>
+          </div>
+          <div class="insight-card warn">
+            <div class="insight-title">Device targeting (iPhone/Android top)</div>
+            <div class="insight-text">Segmentar por modelo de celular restringe demais o alcance. O Meta ja otimiza para quem tem maior poder aquisitivo via comportamento.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ================================================ -->
+    <!-- SECTION: CRIATIVOS -->
+    <!-- ================================================ -->
+    <section id="creatives">
+      <h2 class="section-title">Analise de Criativos</h2>
+      <p class="section-desc">Performance por criativo — todos sao videos</p>
+
+      <div class="three-col">
+        <div class="creative-card">
+          <div class="creative-header" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <p style="opacity:0.7;font-size:10px;text-transform:uppercase;letter-spacing:0.1em">TOP PERFORMER</p>
+            <h4>Protocolo DEFINE</h4>
+            <p>Video educativo sobre protocolo de emagrecimento</p>
+          </div>
+          <div class="creative-body">
+            <div class="creative-stat"><span class="creative-stat-label">Melhor CPL</span><span class="creative-stat-value" style="color:var(--green)">R$ 13,53</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Melhor CTR</span><span class="creative-stat-value">4,78%</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Leads totais</span><span class="creative-stat-value">18+</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Presente em</span><span class="creative-stat-value">7 campanhas</span></div>
+            <div style="margin-top:10px"><span class="tag tag-green">Escalar</span></div>
+          </div>
+        </div>
+
+        <div class="creative-card">
+          <div class="creative-header" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+            <p style="opacity:0.7;font-size:10px;text-transform:uppercase;letter-spacing:0.1em">ALTO CTR</p>
+            <h4>Nao se Compare</h4>
+            <p>Video emocional sobre jornada individual</p>
+          </div>
+          <div class="creative-body">
+            <div class="creative-stat"><span class="creative-stat-label">Melhor CPL</span><span class="creative-stat-value" style="color:var(--green)">R$ 4,26</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Melhor CTR</span><span class="creative-stat-value" style="color:var(--green)">7,84%</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Leads totais</span><span class="creative-stat-value">2</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Presente em</span><span class="creative-stat-value">6 campanhas</span></div>
+            <div style="margin-top:10px"><span class="tag tag-blue">Testar mais</span></div>
+          </div>
+        </div>
+
+        <div class="creative-card">
+          <div class="creative-header" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+            <p style="opacity:0.7;font-size:10px;text-transform:uppercase;letter-spacing:0.1em">BOM P/ HORMONAL</p>
+            <h4>Reposicao Hormonal (Gaya)</h4>
+            <p>Video sobre terapia de reposicao hormonal</p>
+          </div>
+          <div class="creative-body">
+            <div class="creative-stat"><span class="creative-stat-label">Melhor CPL</span><span class="creative-stat-value" style="color:var(--green)">R$ 18,66</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Melhor CTR</span><span class="creative-stat-value">4,08%</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Leads totais</span><span class="creative-stat-value">5</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Presente em</span><span class="creative-stat-value">2 campanhas</span></div>
+            <div style="margin-top:10px"><span class="tag tag-green">Escalar</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px"></div>
+      <div class="three-col">
+        <div class="creative-card">
+          <div class="creative-header" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+            <p style="opacity:0.7;font-size:10px;text-transform:uppercase;letter-spacing:0.1em">DECENTE</p>
+            <h4>Falta de Libido</h4>
+            <p>Video sobre sintomas hormonais</p>
+          </div>
+          <div class="creative-body">
+            <div class="creative-stat"><span class="creative-stat-label">Melhor CPL</span><span class="creative-stat-value">R$ 22,12</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Melhor CTR</span><span class="creative-stat-value">2,51%</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Leads totais</span><span class="creative-stat-value">7</span></div>
+            <div style="margin-top:10px"><span class="tag tag-amber">Manter</span></div>
+          </div>
+        </div>
+
+        <div class="creative-card">
+          <div class="creative-header" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
+            <p style="opacity:0.7;font-size:10px;text-transform:uppercase;letter-spacing:0.1em">DESLIGAR</p>
+            <h4>Saude, prevencao e qualidade</h4>
+            <p>Video generico sobre saude preventiva</p>
+          </div>
+          <div class="creative-body">
+            <div class="creative-stat"><span class="creative-stat-label">Leads totais</span><span class="creative-stat-value" style="color:var(--red)">0</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">CTR medio</span><span class="creative-stat-value" style="color:var(--red)">~1%</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Problema</span><span class="creative-stat-value">Muito generico</span></div>
+            <div style="margin-top:10px"><span class="tag tag-red">Desativar</span></div>
+          </div>
+        </div>
+
+        <div class="creative-card">
+          <div class="creative-header" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
+            <p style="opacity:0.7;font-size:10px;text-transform:uppercase;letter-spacing:0.1em">DESLIGAR</p>
+            <h4>LIPEDEMA / Cansada de tentar</h4>
+            <p>Videos sobre condicoes especificas</p>
+          </div>
+          <div class="creative-body">
+            <div class="creative-stat"><span class="creative-stat-label">Leads totais</span><span class="creative-stat-value" style="color:var(--red)">0</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Problema</span><span class="creative-stat-value">Nicho demais / angulo fraco</span></div>
+            <div class="creative-stat"><span class="creative-stat-label">Gasto</span><span class="creative-stat-value">R$ 100+</span></div>
+            <div style="margin-top:10px"><span class="tag tag-red">Desativar</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ================================================ -->
+    <!-- SECTION: O QUE FUNCIONA vs NAO -->
+    <!-- ================================================ -->
+    <section id="working">
+      <h2 class="section-title">O que Funciona vs O que Nao Funciona</h2>
+      <p class="section-desc">Resumo visual das descobertas</p>
+
+      <div class="two-col">
+        <div class="card" style="border-left: 3px solid var(--green);">
+          <div class="card-header">
+            <div class="card-title" style="color: var(--green);">O que Funciona</div>
+          </div>
+          <ul class="rec-list">
+            <li>
+              <div class="rec-icon" style="background:var(--green-bg);color:var(--green)">1</div>
+              <div><div class="rec-title">ADV+ com geo-restricao pequena (3-5km)</div><div class="rec-desc">CPL de R$ 13,72 — melhor resultado da conta. O algoritmo otimiza melhor com liberdade de publico mas restricao de area.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon" style="background:var(--green-bg);color:var(--green)">2</div>
+              <div><div class="rec-title">Criativo "Protocolo DEFINE"</div><div class="rec-desc">Nome de protocolo especifico gera curiosidade e autoridade. Funciona em todos os adsets.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon" style="background:var(--green-bg);color:var(--green)">3</div>
+              <div><div class="rec-title">Formulario instantaneo como destino</div><div class="rec-desc">Leads via forms do Instagram convertem bem. A friccao e baixa e o pixel captura o evento.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon" style="background:var(--green-bg);color:var(--green)">4</div>
+              <div><div class="rec-title">Interesse "Rolex" como proxy de renda</div><div class="rec-desc">4 leads a R$ 31,89 com interesse unico em Rolex. Simples e eficaz para filtrar classe A.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon" style="background:var(--green-bg);color:var(--green)">5</div>
+              <div><div class="rec-title">WhatsApp para engajamento de meio de funil</div><div class="rec-desc">54 conexoes a R$ 5,39 em media. Bom canal para qualificacao e agendamento direto.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon" style="background:var(--green-bg);color:var(--green)">6</div>
+              <div><div class="rec-title">Video de Reposicao Hormonal (Gaya)</div><div class="rec-desc">CPL R$ 18,66 com CTR 4,08%. Video com producao profissional (Gaya) se destaca.</div></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-left: 3px solid var(--red);">
+          <div class="card-header">
+            <div class="card-title" style="color: var(--red);">O que Nao Funciona</div>
+          </div>
+          <ul class="rec-list">
+            <li>
+              <div class="rec-icon critical">1</div>
+              <div><div class="rec-title">Awareness sem retargeting (R$ 540 desperdicados)</div><div class="rec-desc">28K video views na campanha ADR sem nenhum funil capturando esses visualizadores. Dinheiro queimado.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon critical">2</div>
+              <div><div class="rec-title">Todas campanhas pausadas</div><div class="rec-desc">Zero aprendizado de algoritmo, pixel esfriando, e custo de re-otimizacao futura.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon critical">3</div>
+              <div><div class="rec-title">Interesses "Delivery/Filmes/Alta renda"</div><div class="rec-desc">R$ 86 gastos, 0 leads. Esses interesses nao tem correlacao com intencao de consulta medica.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon critical">4</div>
+              <div><div class="rec-title">CBO com budget muito baixo (CA4)</div><div class="rec-desc">R$ 11/dia dividido entre 2 adsets = R$ 5,50/dia cada. Impossivel sair da fase de aprendizado.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon high">5</div>
+              <div><div class="rec-title">Criativos genericos (Saude/Prevencao/LIPEDEMA)</div><div class="rec-desc">Videos sem angulo especifico nao convertem. "Saude e qualidade de vida" e vago demais.</div></div>
+            </li>
+            <li>
+              <div class="rec-icon high">6</div>
+              <div><div class="rec-title">54 anuncios com R$ 2.494 total</div><div class="rec-desc">Media de R$ 46/anuncio. Nenhum tem volume suficiente para dados estatisticamente relevantes.</div></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ================================================ -->
+    <!-- SECTION: ESTRATEGIA -->
+    <!-- ================================================ -->
+    <section id="strategy">
+      <h2 class="section-title">Recomendacoes Estrategicas</h2>
+      <p class="section-desc">Acoes prioritarias para otimizar a conta</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Prioridade CRITICA — Fazer Agora</div></div>
+          <span class="card-badge badge-red">Urgente</span>
+        </div>
+        <ul class="rec-list">
+          <li>
+            <div class="rec-icon critical">!</div>
+            <div>
+              <div class="rec-title">Reativar campanhas IMEDIATAMENTE</div>
+              <div class="rec-desc">Cada dia com campanhas pausadas e oportunidade perdida. O pixel perde dados, o algoritmo perde aprendizado. Comece com a CA3 (melhor CPL) e NOHA 01 (melhor custo por mensagem).</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon critical">!</div>
+            <div>
+              <div class="rec-title">Consolidar para MAXIMO 3 campanhas ativas</div>
+              <div class="rec-desc">9 campanhas com R$ 2.494 total e insustentavel. Consolidar em: (1) Campanha de Leads, (2) Campanha de WhatsApp, (3) Campanha de Awareness/Retargeting. Concentrar budget = mais dados = melhor otimizacao.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon critical">!</div>
+            <div>
+              <div class="rec-title">Criar retargeting para video viewers</div>
+              <div class="rec-desc">Ha 67K+ video views sem retargeting. Criar audiencia customizada de "video viewers 50%+" e "video viewers 75%+" e rodar formularios para eles. CPL estimado: R$ 5-10.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Prioridade ALTA — Proximas 2 semanas</div></div>
+          <span class="card-badge badge-amber">Importante</span>
+        </div>
+        <ul class="rec-list">
+          <li>
+            <div class="rec-icon high">A</div>
+            <div>
+              <div class="rec-title">Aumentar orcamento dos winners</div>
+              <div class="rec-desc">CA3 CJ2 (ADV+ Raio 3KM) e o melhor adset. Aumentar budget para R$ 40-60/dia e monitorar se CPL se mantem abaixo de R$ 25.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon high">B</div>
+            <div>
+              <div class="rec-title">Matar criativos que nao convertem</div>
+              <div class="rec-desc">Desativar: "Saude, prevencao e qualidade de vida", "LIPEDEMA", "Cansada de tentar de tudo". Zero leads entre eles. Manter apenas Protocolo DEFINE, Nao se Compare, Reposicao Hormonal, e Falta de Libido.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon high">C</div>
+            <div>
+              <div class="rec-title">Configurar CAPI (Conversions API)</div>
+              <div class="rec-desc">Apenas pixel client-side nao e suficiente em 2026. Implementar CAPI via parceiro ou servidor para melhorar match rate e otimizacao de eventos.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon high">D</div>
+            <div>
+              <div class="rec-title">Criar novos criativos baseados nos winners</div>
+              <div class="rec-desc">Produzir variacoes do "Protocolo DEFINE": (1) Depoimento de paciente, (2) Antes/depois do protocolo, (3) Dra. Agnes explicando o protocolo em formato Reels curto (15s). Manter o angulo mas mudar o formato.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Prioridade MEDIA — Proximo mes</div></div>
+          <span class="card-badge badge-blue">Planejamento</span>
+        </div>
+        <ul class="rec-list">
+          <li>
+            <div class="rec-icon medium">1</div>
+            <div>
+              <div class="rec-title">Testar objetivo Leads com otimizacao para Quality Lead</div>
+              <div class="rec-desc">O adset CJ3 da CA3 usa Quality Lead como objetivo. Testar isso com mais budget para ver se os leads sao mais qualificados (agendam e comparecem).</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon medium">2</div>
+            <div>
+              <div class="rec-title">Implementar formulario com perguntas qualificadoras</div>
+              <div class="rec-desc">Adicionar 2-3 perguntas no formulario: (1) Bairro onde mora, (2) Principal queixa, (3) Ja fez acompanhamento com nutrologo. Isso filtra curiosos e melhora a taxa de comparecimento.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon medium">3</div>
+            <div>
+              <div class="rec-title">Expandir retargeting para engajados no Instagram</div>
+              <div class="rec-desc">Ja existem audiencias de engajados (360D) e seguidores. Usar em campanhas de lead com criativos de prova social (depoimentos, resultados).</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon medium">4</div>
+            <div>
+              <div class="rec-title">Testar campanhas para homens</div>
+              <div class="rec-desc">O CJ2 da CA4 (homens, 30-60) teve 2 conexoes de WhatsApp mas com amostra minuscula. O site da Dra. Agnes menciona andropause. Testar um criativo especifico para publico masculino.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ================================================ -->
+    <!-- SECTION: ESTRUTURA SUGERIDA -->
+    <!-- ================================================ -->
+    <section id="structure">
+      <h2 class="section-title">Estrutura de Campanhas Sugerida</h2>
+      <p class="section-desc">Reorganizacao completa da conta para maximizar resultados com orcamento de R$ 100-150/dia</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Campanha 1 — LEADS (Formulario)</div>
+            <div class="card-subtitle">Objetivo: Lead Generation &bull; Orcamento: R$ 60/dia &bull; ABO</div>
+          </div>
+          <span class="card-badge badge-green">Principal</span>
+        </div>
+        <div class="structure-tree">
+          <div class="tree-campaign">
+            <div class="tree-campaign-title">[AGNNES] [LEADS] [FORMS] [ABO]</div>
+            <div class="tree-campaign-meta">Objetivo: Leads &bull; ABO &bull; R$ 60/dia total</div>
+          </div>
+          <div class="tree-adsets">
+            <div class="tree-adset">
+              <div class="tree-adset-name">CJ1 — ADV+ Raio 3KM Publico Aberto</div>
+              <div class="tree-adset-detail">R$ 25/dia &bull; M 30-60 &bull; Raio 3km clinica &bull; ADV+ ativo &bull; Criativos: Protocolo DEFINE + Nao se Compare</div>
+            </div>
+            <div class="tree-adset">
+              <div class="tree-adset-name">CJ2 — ADV+ Raio 5KM Interesse Rolex</div>
+              <div class="tree-adset-detail">R$ 20/dia &bull; M 25-65 &bull; Raio 5km &bull; Interesse: Rolex &bull; ADV+ ativo &bull; Criativos: Protocolo DEFINE + Rep. Hormonal</div>
+            </div>
+            <div class="tree-adset">
+              <div class="tree-adset-name">CJ3 — RMKT Video Viewers 50%+ & Engajados IG</div>
+              <div class="tree-adset-detail">R$ 15/dia &bull; Audiencia custom: Video viewers 50%+ (180d) + Engajados IG (360d) &bull; Criativos: Protocolo DEFINE + Depoimento</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Campanha 2 — WHATSAPP (Mensagens)</div>
+            <div class="card-subtitle">Objetivo: Engagement (Conversations) &bull; Orcamento: R$ 30/dia &bull; ABO</div>
+          </div>
+          <span class="card-badge badge-blue">Qualificacao</span>
+        </div>
+        <div class="structure-tree">
+          <div class="tree-campaign">
+            <div class="tree-campaign-title">[AGNNES] [ENGAJAMENTO] [WHATSAPP] [ABO]</div>
+            <div class="tree-campaign-meta">Objetivo: Conversations &bull; ABO &bull; R$ 30/dia total</div>
+          </div>
+          <div class="tree-adsets">
+            <div class="tree-adset">
+              <div class="tree-adset-name">CJ1 — SP Cidade ADV+ Publico Aberto</div>
+              <div class="tree-adset-detail">R$ 15/dia &bull; M 30-55 &bull; SP cidade &bull; ADV+ ativo &bull; Comportamento: high-value goods &bull; Criativos: Protocolo DEFINE + Nao se Compare</div>
+            </div>
+            <div class="tree-adset">
+              <div class="tree-adset-name">CJ2 — RMKT Leads Nao Convertidos + Engajados</div>
+              <div class="tree-adset-detail">R$ 15/dia &bull; Custom audience: Leads formulario (180d) + Engajados IG &bull; Criativos: Um dia de consulta + Nao se Compare</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Campanha 3 — AWARENESS (Alcance)</div>
+            <div class="card-subtitle">Objetivo: Reach/Video Views &bull; Orcamento: R$ 10-20/dia &bull; 1 Ad Set</div>
+          </div>
+          <span class="card-badge badge-purple">Topo Funil</span>
+        </div>
+        <div class="structure-tree">
+          <div class="tree-campaign">
+            <div class="tree-campaign-title">[AGNNES] [AWARENESS] [ALCANCE]</div>
+            <div class="tree-campaign-meta">Objetivo: Reach &bull; R$ 10-20/dia</div>
+          </div>
+          <div class="tree-adsets">
+            <div class="tree-adset">
+              <div class="tree-adset-name">CJ1 — SP + Alphaville M 30+ Sem restricao de interesse</div>
+              <div class="tree-adset-detail">R$ 10-20/dia &bull; M 30+ &bull; Raio 10km SP + Alphaville &bull; ADV- &bull; Otimizar para Reach &bull; Criativos: Melhores videos (rotacao)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-card info" style="margin-top:16px">
+        <div class="insight-title">Por que ABO e nao CBO?</div>
+        <div class="insight-text">Com orcamento abaixo de R$ 200/dia, ABO permite controlar quanto cada adset recebe. CBO tende a concentrar budget em apenas 1 adset, impedindo testes. Use CBO somente quando tiver R$ 200+/dia E 5+ adsets validados.</div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ================================================ -->
+    <!-- SECTION: BUDGET -->
+    <!-- ================================================ -->
+    <section id="budget">
+      <h2 class="section-title">Estrategia de Budget</h2>
+      <p class="section-desc">Alocacao otimizada baseada nos dados historicos</p>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Cenario Conservador</div></div>
+            <span class="card-badge badge-blue">R$ 100/dia</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span class="progress-label-name">Leads (Formulario)</span><span class="progress-label-value">R$ 60/dia (60%)</span></div>
+            <div class="progress-track"><div class="progress-fill fill-primary" style="width:60%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span class="progress-label-name">WhatsApp (Qualificacao)</span><span class="progress-label-value">R$ 30/dia (30%)</span></div>
+            <div class="progress-track"><div class="progress-fill fill-blue" style="width:30%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span class="progress-label-name">Awareness (Topo)</span><span class="progress-label-value">R$ 10/dia (10%)</span></div>
+            <div class="progress-track"><div class="progress-fill fill-purple" style="width:10%"></div></div>
+          </div>
+          <div style="margin-top:16px; padding:12px; background:var(--surface-alt); border-radius:var(--radius-xs); font-size:12px;">
+            <strong>Projecao mensal:</strong> R$ 3.000/mes &bull; Est. 15-20 leads/mes (CPL ~R$ 20) &bull; Est. 50-60 msgs WhatsApp
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Cenario Agressivo</div></div>
+            <span class="card-badge badge-green">R$ 150/dia</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span class="progress-label-name">Leads (Formulario)</span><span class="progress-label-value">R$ 80/dia (53%)</span></div>
+            <div class="progress-track"><div class="progress-fill fill-primary" style="width:53%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span class="progress-label-name">WhatsApp (Qualificacao)</span><span class="progress-label-value">R$ 40/dia (27%)</span></div>
+            <div class="progress-track"><div class="progress-fill fill-blue" style="width:27%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span class="progress-label-name">Awareness (Topo)</span><span class="progress-label-value">R$ 20/dia (13%)</span></div>
+            <div class="progress-track"><div class="progress-fill fill-purple" style="width:13%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span class="progress-label-name">Testes A/B (Novos criativos)</span><span class="progress-label-value">R$ 10/dia (7%)</span></div>
+            <div class="progress-track"><div class="progress-fill fill-amber" style="width:7%"></div></div>
+          </div>
+          <div style="margin-top:16px; padding:12px; background:var(--surface-alt); border-radius:var(--radius-xs); font-size:12px;">
+            <strong>Projecao mensal:</strong> R$ 4.500/mes &bull; Est. 25-35 leads/mes (CPL ~R$ 18) &bull; Est. 70-90 msgs WhatsApp
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-header">
+          <div><div class="card-title">Regras de Escala</div></div>
+        </div>
+        <div class="two-col">
+          <div>
+            <div class="insight-card good">
+              <div class="insight-title">Quando ESCALAR (aumentar 20%/semana)</div>
+              <div class="insight-text">
+                &bull; CPL se mantem abaixo de R$ 25 por 7 dias consecutivos<br>
+                &bull; Taxa de agendamento via lead > 30%<br>
+                &bull; ROAS positivo (valor do paciente > custo de aquisicao)<br>
+                &bull; Frequencia abaixo de 2.0
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="insight-card bad">
+              <div class="insight-title">Quando REDUZIR ou PAUSAR</div>
+              <div class="insight-text">
+                &bull; CPL sobe acima de R$ 50 por 5+ dias<br>
+                &bull; Frequencia acima de 3.0 (saturacao de publico)<br>
+                &bull; CTR cai abaixo de 0.5% (fadiga de criativo)<br>
+                &bull; Taxa de agendamento via lead < 10%
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ================================================ -->
+    <!-- SECTION: TRACKING -->
+    <!-- ================================================ -->
+    <section id="tracking">
+      <h2 class="section-title">Tracking & Melhorias Estruturais</h2>
+      <p class="section-desc">Infraestrutura tecnica necessaria para escalar</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Checklist de Implementacao</div></div>
+        </div>
+        <ul class="rec-list">
+          <li>
+            <div class="rec-icon critical">1</div>
+            <div>
+              <div class="rec-title">Implementar Conversions API (CAPI)</div>
+              <div class="rec-desc">O Pixel ID 1208141357627950 esta ativo, mas apenas client-side. Em 2026, com restricoes de cookies, o match rate cai para 40-60%. CAPI eleva para 85%+. Usar parceiro como Stape.io ou implementacao server-side via Google Tag Manager.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon critical">2</div>
+            <div>
+              <div class="rec-title">Configurar eventos de conversao no site</div>
+              <div class="rec-desc">Atualmente apenas PageView e Contact estao sendo rastreados. Adicionar: (1) ScheduleAppointment no clique do WhatsApp, (2) Lead no envio de formulario de contato, (3) ViewContent nas paginas de servico.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon high">3</div>
+            <div>
+              <div class="rec-title">Criar audiencias customizadas de video viewers</div>
+              <div class="rec-desc">No Gerenciador de Publicos, criar: (1) Video viewers 25% (180d), (2) Video viewers 50% (180d), (3) Video viewers 75% (90d). Usar em campanhas de retargeting.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon high">4</div>
+            <div>
+              <div class="rec-title">UTM parameters em TODOS os links</div>
+              <div class="rec-desc">Adicionar UTMs consistentes: utm_source=meta&utm_medium=paid&utm_campaign={{campaign.name}}&utm_content={{ad.name}}. Isso permite rastrear no Google Analytics qual campanha gera agendamentos reais.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon medium">5</div>
+            <div>
+              <div class="rec-title">Nomenclatura padronizada</div>
+              <div class="rec-desc">Padrao sugerido: [CLIENTE] [OBJETIVO] [TIPO] [ESTRUTURA] para campanhas. [CJ#] [DESTINO] [GEO] [DEMO] [ADV+/-] [SEGMENTACAO] para adsets. [AD#] [FORMATO] [ANGULO] para anuncios. A conta ja segue parcialmente esse padrao — manter e refinar.</div>
+            </div>
+          </li>
+          <li>
+            <div class="rec-icon medium">6</div>
+            <div>
+              <div class="rec-title">Integrar CRM para medir ROI real</div>
+              <div class="rec-desc">Conectar formularios do Meta ao CRM (ou planilha) para rastrear: Lead > Agendamento > Consulta > Paciente recorrente. Sem isso, e impossivel saber o verdadeiro ROAS.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Arquitetura do Pixel Recomendada</div></div>
+        </div>
+        <div class="funnel">
+          <div class="funnel-step">
+            <div class="funnel-number">1</div>
+            <div>
+              <div class="funnel-label">PageView</div>
+              <div class="funnel-detail">Todas as paginas do site agnesbalieiro.com.br</div>
+            </div>
+            <div class="funnel-value" style="color:var(--text-muted)">Automatico</div>
+          </div>
+          <div class="funnel-step">
+            <div class="funnel-number">2</div>
+            <div>
+              <div class="funnel-label">ViewContent</div>
+              <div class="funnel-detail">Paginas de servico (obesidade, esportiva, hormonal, lipedema)</div>
+            </div>
+            <div class="funnel-value" style="color:var(--blue)">Configurar</div>
+          </div>
+          <div class="funnel-step">
+            <div class="funnel-number">3</div>
+            <div>
+              <div class="funnel-label">Contact / Lead</div>
+              <div class="funnel-detail">Clique no WhatsApp, envio de formulario, clique no telefone</div>
+            </div>
+            <div class="funnel-value" style="color:var(--amber)">Parcial</div>
+          </div>
+          <div class="funnel-step">
+            <div class="funnel-number">4</div>
+            <div>
+              <div class="funnel-label">Schedule</div>
+              <div class="funnel-detail">Agendamento confirmado (offline event via CRM ou manual)</div>
+            </div>
+            <div class="funnel-value" style="color:var(--red)">Nao existe</div>
+          </div>
+          <div class="funnel-step">
+            <div class="funnel-number">5</div>
+            <div>
+              <div class="funnel-label">Purchase</div>
+              <div class="funnel-detail">Consulta realizada (offline conversion upload)</div>
+            </div>
+            <div class="funnel-value" style="color:var(--red)">Nao existe</div>
+          </div>
+        </div>
+        <div class="insight-card warn" style="margin-top:16px;">
+          <div class="insight-title">Por que isso importa?</div>
+          <div class="insight-text">Sem eventos de Schedule e Purchase, o Meta nao sabe quais leads realmente viraram pacientes. Isso impede que o algoritmo otimize para leads de qualidade. Implementar offline conversions (mesmo manualmente via planilha) melhora drasticamente a otimizacao.</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- Footer -->
+    <div style="text-align:center; padding: 40px 0 20px; font-size: 12px; color: var(--text-muted);">
+      <p>Audit gerado por <strong>Noha Ads Manager</strong> &bull; Dra. Agnnes Balieiro &bull; Conta: act_1073658160357576</p>
+      <p style="margin-top:4px">Dados: Out 2024 — Mar 2026 &bull; Gerado em: 03 de Marco de 2026</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// Smooth scroll for sidebar links
+document.querySelectorAll('.sidebar-link[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    // Update active state
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+// Scroll spy
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar-link[href^="#"]');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 100;
+    if (window.scrollY >= sectionTop) {
+      current = section.getAttribute('id');
+    }
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
